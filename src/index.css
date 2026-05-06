@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.skills-marquee-mask {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.skills-marquee-track {
+  width: max-content;
+  animation: skills-conveyor 34s linear infinite;
+}
+
+@keyframes skills-conveyor {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.project-flip-card {
+  perspective: 1200px;
+}
+
+.project-flip-card-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.65s ease;
+}
+
+.project-flip-card:hover .project-flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.project-flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.project-flip-front {
+  overflow: hidden;
+}
+
+.project-flip-back {
+  transform: rotateY(180deg);
+}
+
+.project-pattern-grid::before,
+.project-pattern-radial::before,
+.project-pattern-diagonal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.45;
+}
+
+.project-pattern-grid::before {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.project-pattern-radial::before {
+  background-image: radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 255, 255, 0.2),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(255, 255, 255, 0.14),
+      transparent 34%
+    );
+}
+
+.project-pattern-diagonal::before {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0px,
+    rgba(255, 255, 255, 0.12) 2px,
+    transparent 2px,
+    transparent 16px
+  );
+}
