@@ -1,4 +1,10 @@
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
 const NAV_ITEMS = [
   { id: "about", label: "About" },
@@ -11,7 +17,12 @@ const NAV_ITEMS = [
 
 function LeftSidebar({ activeSection, showIdentity }) {
   const { scrollYProgress } = useScroll();
-  const progressHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const springProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+  const progressHeight = useTransform(springProgress, [0, 1], ["0%", "100%"]);
 
   const activeIndex = Math.max(
     0,

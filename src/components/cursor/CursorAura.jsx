@@ -19,7 +19,7 @@ function CursorAura() {
 
   return (
     <motion.div
-      className="pointer-events-none fixed z-[9999] hidden h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pink-300/20 blur-[80px] lg:block"
+      className="pointer-events-none fixed z-[9999] hidden h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pink-300/40 blur-[40px] lg:block"
       style={{ left: auraX, top: auraY }}
       aria-hidden="true"
     />

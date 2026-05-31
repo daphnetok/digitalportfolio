@@ -66,7 +66,7 @@ function SkillSpotlightCard({ icon: Icon, title, description, skills }) {
           {skills.map((skill) => (
             <span
               key={skill}
-              className="rounded-full bg-zinc-50 px-3 py-1 text-xs font-medium text-zinc-600"
+              className="aura-plate rounded-full px-3 py-1 text-xs"
             >
               {skill}
             </span>

@@ -17,7 +17,7 @@ const EDUCATION = [
 
 function EducationSection() {
   return (
-    <section id="education" className="px-6 py-24">
+    <section id="education" className="px-6 py-32">
       <div className="mx-auto max-w-6xl">
         <h2
           className="mb-12 text-4xl font-bold text-zinc-800 md:text-5xl"

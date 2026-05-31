@@ -94,10 +94,6 @@ function App() {
   const experienceSectionRef = useRef(null);
 
   useEffect(() => {
-    const html = document.documentElement;
-    const previousScrollBehavior = html.style.scrollBehavior;
-    html.style.scrollBehavior = "smooth";
-
     const fontId = "space-mono-font";
     if (!document.getElementById(fontId)) {
       const link = document.createElement("link");
@@ -107,10 +103,6 @@ function App() {
         "https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap";
       document.head.appendChild(link);
     }
-
-    return () => {
-      html.style.scrollBehavior = previousScrollBehavior;
-    };
   }, []);
 
   useEffect(() => {
@@ -153,7 +145,7 @@ function App() {
       <main className="relative z-10 lg:pl-72">
         <Hero />
 
-        <section id="about" className="min-h-screen px-6 py-24">
+        <section id="about" className="min-h-screen px-6 py-32">
           <div className="mx-auto max-w-6xl">
             <h2
               className="mb-12 text-4xl font-bold text-zinc-800 md:text-5xl"
@@ -173,38 +165,41 @@ function App() {
               </div>
               <div className="aura-card rounded-2xl p-8">
                 <div className="flex h-full flex-col justify-center gap-4">
-                  <a
+                  <motion.a
                     href="/Daphne_Tok_CV.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="aura-button group flex items-center justify-center gap-3 rounded-xl px-6 py-5 text-lg font-semibold"
+                    whileTap={{ scale: 0.95 }}
                   >
                     <FiDownload className="text-xl text-rose-400 transition group-hover:text-rose-500" />
                     View Résumé
-                  </a>
-                  <a
+                  </motion.a>
+                  <motion.a
                     href="https://github.com/daphnetok"
                     target="_blank"
                     rel="noreferrer"
                     className="aura-button group flex items-center justify-center gap-3 rounded-xl px-6 py-5 text-lg font-semibold"
+                    whileTap={{ scale: 0.95 }}
                   >
                     <FiGithub className="text-xl text-rose-400 transition group-hover:text-rose-500" />
                     GitHub
-                  </a>
-                  <a
+                  </motion.a>
+                  <motion.a
                     href="mailto:daphne.tok.2024@computing.smu.edu.sg"
                     className="aura-button group flex items-center justify-center gap-3 rounded-xl px-6 py-5 text-lg font-semibold"
+                    whileTap={{ scale: 0.95 }}
                   >
                     <FiMail className="text-xl text-rose-400 transition group-hover:text-rose-500" />
                     Contact Me
-                  </a>
+                  </motion.a>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="skills" className="px-6 py-24">
+        <section id="skills" className="px-6 py-32">
           <div className="mx-auto max-w-6xl">
             <h2
               className="mb-12 text-4xl font-bold text-zinc-800 md:text-5xl"
@@ -219,7 +214,7 @@ function App() {
         <section
           id="experience"
           ref={experienceSectionRef}
-          className="min-h-screen px-6 py-24"
+          className="min-h-screen px-6 py-32"
         >
           <div className="mx-auto max-w-6xl">
             <h2
@@ -278,7 +273,7 @@ function App() {
 
         <EducationSection />
 
-        <section id="projects" className="min-h-screen px-6 py-24">
+        <section id="projects" className="min-h-screen px-6 py-32">
           <div className="mx-auto max-w-6xl">
             <h2
               className="mb-12 text-4xl font-bold text-zinc-800 md:text-5xl"
@@ -319,12 +314,13 @@ function App() {
                             </span>
                           ))}
                         </div>
-                        <a
+                        <motion.a
                           href={project.source}
                           className="aura-button inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium"
+                          whileTap={{ scale: 0.95 }}
                         >
                           View Source
-                        </a>
+                        </motion.a>
                       </div>
                     </div>
                   </div>

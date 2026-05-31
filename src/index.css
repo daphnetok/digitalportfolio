@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: #fbcfe8;
+  color: #18181b;
+}
+
 html,
 body,
 #root {
@@ -103,6 +112,36 @@ body {
   border-color: rgb(251 113 133 / 0.55);
   background: rgb(255 241 242 / 0.95);
   box-shadow: 0 8px 20px rgba(244, 114, 182, 0.12);
+}
+
+.aura-button:active {
+  transform: scale(0.97);
+}
+
+@keyframes subtle-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(244, 114, 182, 0);
+    border-color: rgba(251, 207, 232, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 26px rgba(244, 114, 182, 0.26);
+    border-color: rgba(244, 114, 182, 0.35);
+  }
+}
+
+.animate-subtle-glow {
+  animation: subtle-glow 6.5s ease-in-out infinite;
+}
+
+.cta-highlight {
+  background:
+    radial-gradient(
+      circle at 50% 10%,
+      rgba(251, 207, 232, 0.55),
+      rgba(255, 255, 255, 0) 60%
+    ),
+    rgba(255, 255, 255, 0.72);
 }
 
 .aura-plate {

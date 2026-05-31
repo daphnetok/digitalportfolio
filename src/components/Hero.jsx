@@ -1,26 +1,25 @@
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const HEADING_TEXT = "Hi there, I'm Daphne";
-const SUBTITLE_WORDS = [
-  "Engineering",
-  "intelligent",
-  "data",
-  "pipelines",
-  "and",
-  "predictive",
-  "models",
-  "to",
-  "drive",
-  "strategic",
-  "decisions.",
-];
+const SUBTITLE_TEXT =
+  "Engineering intelligent data pipelines and predictive models to drive strategic decisions.";
 const HIGHLIGHT_WORDS = new Set(["predictive", "models", "strategic", "decisions."]);
+const FOCUSED_PREFIX = "Focused on ";
+const FOCUSED_PHRASES = [
+  "Business Analytics",
+  "Data Science",
+  "Machine Learning",
+];
+
+const SUBTITLE_WORDS = SUBTITLE_TEXT.split(" ");
 
 function Hero() {
   const [headingLength, setHeadingLength] = useState(0);
-  const [wordCount, setWordCount] = useState(0);
-  const [showFocused, setShowFocused] = useState(false);
+  const [subtitleLength, setSubtitleLength] = useState(0);
+  const [focusedLength, setFocusedLength] = useState(0);
+  const [focusedIndex, setFocusedIndex] = useState(0);
+  const [focusedDeleting, setFocusedDeleting] = useState(false);
+  const [focusedReady, setFocusedReady] = useState(false);
   const [headingDone, setHeadingDone] = useState(false);
   const [subtitleDone, setSubtitleDone] = useState(false);
 
@@ -34,24 +33,65 @@ function Hero() {
 
   useEffect(() => {
     if (!headingDone) return;
-    if (wordCount < SUBTITLE_WORDS.length) {
-      const timeout = setTimeout(() => setWordCount((prev) => prev + 1), 130);
+    if (subtitleLength < SUBTITLE_TEXT.length) {
+      const timeout = setTimeout(
+        () => setSubtitleLength((prev) => prev + 1),
+        28
+      );
       return () => clearTimeout(timeout);
     }
     setSubtitleDone(true);
-  }, [headingDone, wordCount]);
+  }, [headingDone, subtitleLength]);
 
   useEffect(() => {
     if (!subtitleDone) return;
-    const timeout = setTimeout(() => setShowFocused(true), 250);
+    const timeout = setTimeout(() => setFocusedReady(true), 450);
     return () => clearTimeout(timeout);
   }, [subtitleDone]);
 
+  useEffect(() => {
+    if (!focusedReady) return;
+    const currentPhrase = FOCUSED_PHRASES[focusedIndex];
+    const typingSpeed = focusedDeleting ? 35 : 60;
+    const pauseAfterType = 900;
+    const pauseAfterDelete = 250;
+
+    if (!focusedDeleting && focusedLength < currentPhrase.length) {
+      const timeout = setTimeout(
+        () => setFocusedLength((prev) => prev + 1),
+        typingSpeed
+      );
+      return () => clearTimeout(timeout);
+    }
+
+    if (!focusedDeleting && focusedLength >= currentPhrase.length) {
+      const timeout = setTimeout(() => setFocusedDeleting(true), pauseAfterType);
+      return () => clearTimeout(timeout);
+    }
+
+    if (focusedDeleting && focusedLength > 0) {
+      const timeout = setTimeout(
+        () => setFocusedLength((prev) => prev - 1),
+        typingSpeed
+      );
+      return () => clearTimeout(timeout);
+    }
+
+    if (focusedDeleting && focusedLength === 0) {
+      const timeout = setTimeout(() => {
+        setFocusedDeleting(false);
+        setFocusedIndex((prev) => (prev + 1) % FOCUSED_PHRASES.length);
+      }, pauseAfterDelete);
+      return () => clearTimeout(timeout);
+    }
+  }, [focusedReady, focusedDeleting, focusedIndex, focusedLength]);
+
   const displayedHeading = HEADING_TEXT.slice(0, headingLength);
-  const displayedWords = SUBTITLE_WORDS.slice(0, wordCount);
+  const displayedSubtitle = SUBTITLE_TEXT.slice(0, subtitleLength);
+  const displayedWords = displayedSubtitle.split(" ");
   const isTypingHeading = headingLength < HEADING_TEXT.length;
-  const isTypingSubtitle =
-    headingDone && wordCount < SUBTITLE_WORDS.length;
+  const isTypingSubtitle = headingDone && subtitleLength < SUBTITLE_TEXT.length;
+  const isTypingFocused = focusedReady;
 
   useEffect(() => {
     const serifId = "playfair-font";
@@ -85,7 +125,11 @@ function Hero() {
           {displayedWords.map((word, index) => (
             <span
               key={`${word}-${index}`}
-              className={HIGHLIGHT_WORDS.has(word) ? "text-pink-500" : undefined}
+              className={
+                HIGHLIGHT_WORDS.has(SUBTITLE_WORDS[index])
+                  ? "text-pink-500"
+                  : undefined
+              }
             >
               {word}
               {index < displayedWords.length - 1 ? " " : ""}
@@ -96,15 +140,19 @@ function Hero() {
           )}
         </p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={showFocused ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="mx-auto mt-6 text-lg text-zinc-500 md:text-xl"
-        >
-          <span className="text-zinc-500">Focused on </span>
-          <span className="font-medium text-rose-400">Business Analytics</span>
-        </motion.p>
+        <p className="mx-auto mt-6 min-h-[1.75rem] text-lg text-zinc-500 md:text-xl">
+          {focusedReady && (
+            <>
+              {FOCUSED_PREFIX}
+              <span className="font-medium text-rose-400">
+                {FOCUSED_PHRASES[focusedIndex].slice(0, focusedLength)}
+              </span>
+              {isTypingFocused && (
+                <span className="ml-0.5 inline-block h-[0.8em] w-0.5 animate-pulse bg-rose-300 align-middle" />
+              )}
+            </>
+          )}
+        </p>
       </div>
 
       <div className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-3xl text-rose-300">
