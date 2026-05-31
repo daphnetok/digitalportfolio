@@ -10,38 +10,105 @@ body,
 
 body {
   margin: 0;
+  background: #fcfafb;
 }
 
-.skills-marquee-mask {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
+.body-copy {
+  text-align: justify;
+  hyphens: auto;
+}
+
+.aura-gradient-base {
+  background:
+    radial-gradient(
+      circle at 50% calc(22% + var(--aura-scroll, 0) * 14%),
+      #fff4f7 0%,
+      #fdf7f9 38%,
+      #fcfafb 72%,
+      #fcfafb 100%
+    ),
+    linear-gradient(
+      180deg,
+      #fff6f9 0%,
+      #fcfafb calc(45% + var(--aura-scroll, 0) * 35%),
+      #fcfafb 100%
+    );
+}
+
+.aura-gradient-bloom {
+  background: radial-gradient(
+    circle,
+    rgba(251, 207, 232, 0.42),
+    rgba(254, 205, 211, 0.22) 38%,
+    transparent 72%
   );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
+}
+
+.aura-scroll-tint {
+  background: radial-gradient(
+    ellipse 120% 82% at 50% calc(12% + var(--aura-scroll, 0) * 58%),
+    rgba(244, 114, 182, calc(0.04 + var(--aura-scroll, 0) * 0.07)),
+    transparent 62%
   );
 }
 
-.skills-marquee-track {
-  width: max-content;
-  animation: skills-conveyor 34s linear infinite;
+.aura-drift-slow {
+  animation: aura-drift 18s ease-in-out infinite;
 }
 
-@keyframes skills-conveyor {
-  0% {
-    transform: translateX(0%);
-  }
+.aura-drift-reverse {
+  animation: aura-drift-reverse 22s ease-in-out infinite;
+}
+
+@keyframes aura-drift {
+  0%,
   100% {
-    transform: translateX(-100%);
+    transform: translate3d(0, 0, 0) scale(1);
   }
+  50% {
+    transform: translate3d(2%, 3%, 0) scale(1.06);
+  }
+}
+
+@keyframes aura-drift-reverse {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-2%, -2%, 0) scale(0.96);
+  }
+}
+
+.aura-card {
+  border: 1px solid rgba(228, 228, 231, 0.95);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 16px 40px rgba(113, 113, 122, 0.08);
+}
+
+.aura-button {
+  border: 1px solid rgba(212, 212, 216, 0.9);
+  background: rgba(255, 255, 255, 0.95);
+  color: #3f3f46;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.aura-button:hover {
+  transform: translateY(-2px);
+  border-color: rgb(251 113 133 / 0.55);
+  background: rgb(255 241 242 / 0.95);
+  box-shadow: 0 8px 20px rgba(244, 114, 182, 0.12);
+}
+
+.aura-plate {
+  border: 1px solid rgba(228, 228, 231, 0.95);
+  background: rgba(255, 255, 255, 0.9);
+  color: #3f3f46;
 }
 
 .project-flip-card {
@@ -78,25 +145,25 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.45;
+  opacity: 0.5;
 }
 
 .project-pattern-grid::before {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(161, 161, 170, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(161, 161, 170, 0.14) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
 .project-pattern-radial::before {
   background-image: radial-gradient(
       circle at 20% 20%,
-      rgba(255, 255, 255, 0.2),
+      rgba(251, 113, 133, 0.22),
       transparent 32%
     ),
     radial-gradient(
       circle at 80% 80%,
-      rgba(255, 255, 255, 0.14),
+      rgba(244, 114, 182, 0.18),
       transparent 34%
     );
 }
@@ -104,9 +171,30 @@ body {
 .project-pattern-diagonal::before {
   background-image: repeating-linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.12) 0px,
-    rgba(255, 255, 255, 0.12) 2px,
+    rgba(161, 161, 170, 0.18) 0px,
+    rgba(161, 161, 170, 0.18) 2px,
     transparent 2px,
     transparent 16px
   );
+}
+
+.project-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.project-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: rgba(161, 161, 170, 0.45);
+}
+
+.project-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(161, 161, 170, 0.45) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura-drift-slow,
+  .aura-drift-reverse {
+    animation: none !important;
+  }
 }

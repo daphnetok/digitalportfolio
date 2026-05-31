@@ -1,94 +1,99 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { FiDownload, FiGithub, FiMail } from "react-icons/fi";
+import BackgroundLayers from "./components/background/BackgroundLayers";
+import CursorAura from "./components/cursor/CursorAura";
 import Hero from "./components/Hero";
-
-const TECH_STACK = [
-  "Pandas",
-  "SQL",
-  "Docker",
-  "React",
-  "Vue",
-  "Flask",
-  "Azure",
-  "LLMs (Gemma)",
-  "Data Engineering",
-  "Generative AI",
-  "Microservices",
-  "Git",
-  "Python",
-];
+import LeftSidebar, { NAV_ITEMS } from "./components/layout/LeftSidebar";
+import SkillsSpotlightGrid from "./components/skills/SkillsSpotlightGrid";
+import { useScrollspy } from "./hooks/useScrollspy";
+import EducationSection from "./components/sections/EducationSection";
+import FooterCTA from "./components/sections/FooterCTA";
 
 const EXPERIENCES = [
   {
-    role: "Business Analytics Intern",
-    date: "May 2025 - Aug 2025",
-    company: "Company Name",
+    role: "Undergraduate Research Assistant (GenAI Fellowship)",
+    date: "Feb 9, 2026 - May 22, 2026",
+    company: "SMU SCIS",
     achievements: [
-      "Built dashboards to track KPI trends across operations and marketing teams.",
-      "Automated weekly reporting workflows, reducing manual prep time by 40%.",
-      "Presented actionable insights that improved campaign targeting decisions.",
+      "Engineered an advanced RAG and NLI pipeline using Gemma 4 to autonomously extract Knowledge Components from unstructured educational syllabuses.",
+      "Developed a deterministic semantic mapping algorithm using vector embeddings to build hierarchical Directed Acyclic Graphs (DAGs), eliminating structural hallucinations.",
+      "Tuned hyperparameter thresholds to optimize true-positive pedagogical connections across 340+ concepts, generating 64 recursive DAGs with 100% structural validity.",
     ],
   },
   {
-    role: "Data Analyst (Part-Time)",
-    date: "Jan 2024 - Apr 2025",
-    company: "Company Name",
+    role: "Data Analyst Intern",
+    date: "May 2025 - July 2025",
+    company: "Cyzone",
     achievements: [
-      "Designed SQL data models for cleaner analytics and faster ad-hoc analysis.",
-      "Developed Python data validation checks to improve data quality.",
-      "Collaborated with product and business teams to define success metrics.",
+      "Validated and standardized 30+ venture capital datasets daily across 20+ key cities, ensuring data integrity for flagship reports.",
+      "Synthesized emerging technology trends and startup valuations, translating complex market data into actionable insights influencing 22M+ entrepreneurs and investors.",
+    ],
+  },
+  {
+    role: "Junior Analyst / Data Intern",
+    date: "Sept 2023 - May 2024",
+    company: "Attribute Data",
+    achievements: [
+      "Designed and deployed comprehensive Adobe Analytics dashboards to track campaign performance and customer behavior, directly supporting C-suite KPI reporting.",
+      "Automated User Acceptance Testing (UAT) workflows using Excel, accelerating manual validation time by 50%.",
+      "Authored technical specifications for web tagging pipelines and co-led onboarding for 16+ stakeholders on data validation protocols.",
     ],
   },
 ];
 
 const FEATURED_PROJECTS = [
   {
-    title: "InsightPulse Dashboard",
+    title: "ISD Entity Extraction App",
     description:
-      "An analytics dashboard for tracking funnel performance, campaign ROI, and weekly KPI movement in one place.",
-    stack: ["React", "SQL", "Python"],
-    source: "#",
+      "Led a team to develop a predictive web app that automates the extraction of entities from unstructured text, reducing manual data sifting.",
+    stack: ["Python", "Flask", "Ollama API", "NLP"],
+    source: "https://github.com/daphnetok/datathon-entity-relationship-analysis-modelling",
     patternClass: "project-pattern-grid",
   },
   {
-    title: "GenAI Knowledge Copilot",
+    title: "SG Livability Analytics",
     description:
-      "A retrieval-powered assistant that summarizes internal docs and provides source-linked answers for faster decisions.",
-    stack: ["Flask", "LLMs (Gemma)", "Azure"],
-    source: "#",
+      "Developed predictive dashboards to analyze public transport efficiency and forecast infrastructure load based on benchmarked public data.",
+    stack: ["Power BI", "DAX", "AI Predictive Modeling"],
+    source: "https://github.com/daphnetok",
     patternClass: "project-pattern-radial",
   },
   {
-    title: "Pipeline Watchtower",
+    title: "Advanced RAG for Education",
     description:
-      "A lightweight monitoring layer for ETL pipelines with automated anomaly flags and alert summaries.",
-    stack: ["Data Engineering", "Docker", "Microservices"],
-    source: "#",
+      "Architected an end-to-end pipeline using Gemma 4 and Python to automatically extract and map educational concepts from unstructured syllabuses. Engineered semantic algorithms and an automated validation system to generate highly accurate, hallucination-free knowledge graphs.",
+    stack: ["Python", "Gemma 4", "LlamaParse", "Llava", "Vector Embeddings", "NLI"],
+    source: "https://github.com/daphnetok/Advanced-RAG-for-education",
     patternClass: "project-pattern-diagonal",
+  },
+  {
+    title: "2Shiok2Go - reduce SG hawker food waste",
+    description:
+      "2Shiok2Go is a web app that reduces food waste in Singapore by linking users to hawker stalls with surplus meals. Featuring location-based listings, price and dietary filters, pickup slots, and AI-powered food suggestions, it makes hawker food more accessible while promoting sustainability.",
+    stack: ["Python", "Vue.js", "Firebase", "Chart.js", "Tailwind.css", "Google Maps API", "Gemini API"],
+    source: "https://github.com/daphnetok/Advanced-RAG-for-education",
+    patternClass: "project-pattern-grid",
+  },
+  {
+    title: "Doctor Everywhere",
+    description:
+      "Doctor Everywhere covers a Telemedicine business scenario, where patients are able to consult a doctor and get a prescription from the comfort of their home. Our system allows the patient to queue virtually and make payment, the doctor to make prescription.",
+    stack: ["Python", "Vue.js", "Firebase", "Chart.js", "Tailwind.css", "Google Maps API", "Gemini API"],
+    source: "https://github.com/daphnetok/Advanced-RAG-for-education",
+    patternClass: "project-pattern-radial",
   },
 ];
 
-function App() {
-  useEffect(() => {
-    // #region agent log
-    fetch("http://127.0.0.1:7789/ingest/4cad9f9e-39a5-48db-9dd0-038ddb88a4a3", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "0b756e",
-      },
-      body: JSON.stringify({
-        sessionId: "0b756e",
-        runId: "pre-fix",
-        hypothesisId: "H3",
-        location: "src/App.jsx:7",
-        message: "App mounted and useEffect entered",
-        data: {},
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
+const SECTION_IDS = NAV_ITEMS.map((item) => item.id);
 
+function App() {
+  const activeSection = useScrollspy(SECTION_IDS);
+  const [showIdentity, setShowIdentity] = useState(false);
+  const [experienceProgress, setExperienceProgress] = useState(0);
+  const experienceSectionRef = useRef(null);
+
+  useEffect(() => {
     const html = document.documentElement;
     const previousScrollBehavior = html.style.scrollBehavior;
     html.style.scrollBehavior = "smooth";
@@ -108,195 +113,229 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => {
+      setShowIdentity(window.scrollY > window.innerHeight);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const section = experienceSectionRef.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const total = rect.height + window.innerHeight;
+      const progress = ((window.innerHeight - rect.top) / total) * 100;
+      setExperienceProgress(Math.max(0, Math.min(100, progress)));
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+
+    return () => {
+      window.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
+    };
+  }, []);
+
   return (
-    <div className="bg-neutral-950 text-neutral-100 font-sans">
-      <nav className="sticky top-0 z-50 border-b border-neutral-800 bg-neutral-950/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-center gap-8 px-6 py-4 text-sm uppercase tracking-widest">
-          <a href="#about" className="transition hover:text-neutral-300">
-            About
-          </a>
-          <a href="#skills" className="transition hover:text-neutral-300">
-            Skills
-          </a>
-          <a href="#experience" className="transition hover:text-neutral-300">
-            Experience
-          </a>
-          <a href="#projects" className="transition hover:text-neutral-300">
-            Projects
-          </a>
-        </div>
-      </nav>
+    <div className="relative min-h-screen font-sans text-zinc-800">
+      <BackgroundLayers />
+      <CursorAura />
+      <LeftSidebar activeSection={activeSection} showIdentity={showIdentity} />
 
-      <Hero />
+      <main className="relative z-10 lg:pl-72">
+        <Hero />
 
-      <section id="about" className="min-h-screen px-6 py-24">
-        <div className="mx-auto max-w-6xl">
-          <h2
-            className="mb-12 text-4xl font-bold md:text-5xl"
-            style={{ fontFamily: "'Space Mono', monospace" }}
-          >
-            About Me
-          </h2>
-          <div className="grid gap-10 md:grid-cols-2">
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900/40 p-8">
-              <p className="leading-relaxed text-neutral-300">
-                I am Daphne, an Information Systems student with a strong focus
-                on business analytics, data analytics, and AI-driven products.
-                I enjoy translating complex datasets into practical insights and
-                building thoughtful solutions that support clearer decisions and
-                measurable impact.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900/40 p-8">
-              <div className="flex h-full flex-col justify-center gap-4">
-                <a
-                  href="#"
-                  className="group flex items-center justify-center gap-3 rounded-xl border border-neutral-700 bg-neutral-900 px-6 py-5 text-lg font-semibold transition duration-300 hover:-translate-y-0.5 hover:border-neutral-500 hover:bg-neutral-800"
-                >
-                  <FiDownload className="text-xl text-neutral-300 transition group-hover:text-neutral-100" />
-                  Download CV
-                </a>
-                <a
-                  href="https://github.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group flex items-center justify-center gap-3 rounded-xl border border-neutral-700 bg-neutral-900 px-6 py-5 text-lg font-semibold transition duration-300 hover:-translate-y-0.5 hover:border-neutral-500 hover:bg-neutral-800"
-                >
-                  <FiGithub className="text-xl text-neutral-300 transition group-hover:text-neutral-100" />
-                  GitHub
-                </a>
-                <a
-                  href="mailto:yourname@example.com"
-                  className="group flex items-center justify-center gap-3 rounded-xl border border-neutral-700 bg-neutral-900 px-6 py-5 text-lg font-semibold transition duration-300 hover:-translate-y-0.5 hover:border-neutral-500 hover:bg-neutral-800"
-                >
-                  <FiMail className="text-xl text-neutral-300 transition group-hover:text-neutral-100" />
-                  Contact Me
-                </a>
+        <section id="about" className="min-h-screen px-6 py-24">
+          <div className="mx-auto max-w-6xl">
+            <h2
+              className="mb-12 text-4xl font-bold text-zinc-800 md:text-5xl"
+              style={{ fontFamily: "'Space Mono', monospace" }}
+            >
+              About Me
+            </h2>
+            <div className="grid gap-10 md:grid-cols-2">
+              <div className="aura-card rounded-2xl p-8">
+                <p className="body-copy leading-relaxed text-zinc-500">
+                  I am Daphne Tok, an Information Systems undergraduate specializing
+                  in Business Analytics. I am passionate about transforming raw data
+                  into actionable business intelligence using tools like Power BI,
+                  SQL, and Python. I enjoy uncovering insights that directly optimize
+                  business strategy and building AI-driven solutions.
+                </p>
+              </div>
+              <div className="aura-card rounded-2xl p-8">
+                <div className="flex h-full flex-col justify-center gap-4">
+                  <a
+                    href="/Daphne_Tok_CV.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="aura-button group flex items-center justify-center gap-3 rounded-xl px-6 py-5 text-lg font-semibold"
+                  >
+                    <FiDownload className="text-xl text-rose-400 transition group-hover:text-rose-500" />
+                    View Résumé
+                  </a>
+                  <a
+                    href="https://github.com/daphnetok"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="aura-button group flex items-center justify-center gap-3 rounded-xl px-6 py-5 text-lg font-semibold"
+                  >
+                    <FiGithub className="text-xl text-rose-400 transition group-hover:text-rose-500" />
+                    GitHub
+                  </a>
+                  <a
+                    href="mailto:daphne.tok.2024@computing.smu.edu.sg"
+                    className="aura-button group flex items-center justify-center gap-3 rounded-xl px-6 py-5 text-lg font-semibold"
+                  >
+                    <FiMail className="text-xl text-rose-400 transition group-hover:text-rose-500" />
+                    Contact Me
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="skills" className="px-6 py-24">
-        <div className="mx-auto max-w-6xl">
-          <h2
-            className="mb-12 text-4xl font-bold md:text-5xl"
-            style={{ fontFamily: "'Space Mono', monospace" }}
-          >
-            Skills
-          </h2>
-          <div className="skills-marquee-mask rounded-2xl border border-neutral-800 bg-neutral-900/40 py-8">
-            <div className="skills-marquee-track flex items-center gap-4">
-              {[...TECH_STACK, ...TECH_STACK].map((tech, index) => (
-                <span
-                  key={`${tech}-${index}`}
-                  className="shrink-0 rounded-full border border-neutral-700 bg-neutral-800 px-6 py-3 text-sm font-medium tracking-wide text-neutral-100"
-                  style={{ fontFamily: "'Space Mono', monospace" }}
-                >
-                  {tech}
-                </span>
+        <section id="skills" className="px-6 py-24">
+          <div className="mx-auto max-w-6xl">
+            <h2
+              className="mb-12 text-4xl font-bold text-zinc-800 md:text-5xl"
+              style={{ fontFamily: "'Space Mono', monospace" }}
+            >
+              Skills
+            </h2>
+            <SkillsSpotlightGrid />
+          </div>
+        </section>
+
+        <section
+          id="experience"
+          ref={experienceSectionRef}
+          className="min-h-screen px-6 py-24"
+        >
+          <div className="mx-auto max-w-6xl">
+            <h2
+              className="mb-12 text-4xl font-bold text-zinc-800 md:text-5xl"
+              style={{ fontFamily: "'Space Mono', monospace" }}
+            >
+              Experience
+            </h2>
+            <div className="relative">
+              <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-zinc-200 md:block" />
+              <div
+                className="absolute left-1/2 top-0 hidden w-px -translate-x-1/2 bg-rose-300 transition-[height] duration-300 md:block"
+                style={{ height: `${experienceProgress}%` }}
+              />
+
+              <div className="space-y-10">
+                {EXPERIENCES.map((item, index) => {
+                  const isLeft = index % 2 === 0;
+                  return (
+                    <div
+                      key={`${item.role}-${index}`}
+                      className="relative grid md:grid-cols-2 md:gap-16"
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, y: 28 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 0.55, ease: "easeOut" }}
+                        className={`${
+                          isLeft ? "md:col-start-1" : "md:col-start-2"
+                        } aura-card rounded-2xl p-8`}
+                      >
+                        <h3 className="text-2xl font-semibold text-zinc-800">
+                          {item.role}
+                        </h3>
+                        <p className="mt-1 text-sm uppercase tracking-widest text-zinc-500">
+                          {item.date} · {item.company}
+                        </p>
+                        <ul className="mt-5 list-disc space-y-2 pl-5 text-zinc-500">
+                          {item.achievements.map((achievement) => (
+                            <li key={achievement} className="body-copy">
+                              {achievement}
+                            </li>
+                          ))}
+                        </ul>
+                      </motion.div>
+
+                      <div className="pointer-events-none absolute left-1/2 top-8 hidden h-3 w-3 -translate-x-1/2 rounded-full border border-zinc-300 bg-white md:block" />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <EducationSection />
+
+        <section id="projects" className="min-h-screen px-6 py-24">
+          <div className="mx-auto max-w-6xl">
+            <h2
+              className="mb-12 text-4xl font-bold text-zinc-800 md:text-5xl"
+              style={{ fontFamily: "'Space Mono', monospace" }}
+            >
+              Featured Projects
+            </h2>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {FEATURED_PROJECTS.map((project) => (
+                <article key={project.title} className="project-flip-card h-80">
+                  <div className="project-flip-card-inner relative h-full w-full rounded-2xl">
+                    <div
+                      className={`project-flip-face project-flip-front ${project.patternClass} aura-card flex h-full items-end rounded-2xl p-6`}
+                    >
+                      <h3
+                        className="text-2xl font-bold text-zinc-800"
+                        style={{ fontFamily: "'Space Mono', monospace" }}
+                      >
+                        {project.title}
+                      </h3>
+                    </div>
+
+                    <div className="project-flip-face project-flip-back aura-card flex h-full flex-col rounded-2xl p-6">
+                      <h3 className="flex-none text-xl font-semibold text-zinc-800">
+                        {project.title}
+                      </h3>
+                      <p className="body-copy project-scrollbar mt-3 flex-grow overflow-y-auto pr-1 text-sm leading-relaxed text-zinc-500">
+                        {project.description}
+                      </p>
+                      <div className="mt-auto flex-none space-y-4">
+                        <div className="flex flex-wrap gap-2">
+                          {project.stack.map((tag) => (
+                            <span
+                              key={tag}
+                              className="aura-plate rounded-full px-3 py-1 text-xs"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        <a
+                          href={project.source}
+                          className="aura-button inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium"
+                        >
+                          View Source
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </article>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="experience" className="min-h-screen px-6 py-24">
-        <div className="mx-auto max-w-6xl">
-          <h2
-            className="mb-12 text-4xl font-bold md:text-5xl"
-            style={{ fontFamily: "'Space Mono', monospace" }}
-          >
-            Experience
-          </h2>
-          <div className="relative">
-            <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-neutral-800 md:block" />
-
-            <div className="space-y-10">
-              {EXPERIENCES.map((item, index) => {
-                const isLeft = index % 2 === 0;
-                return (
-                  <div
-                    key={`${item.role}-${index}`}
-                    className="relative grid md:grid-cols-2 md:gap-16"
-                  >
-                    <div
-                      className={`${
-                        isLeft ? "md:col-start-1" : "md:col-start-2"
-                      } rounded-2xl border border-neutral-800 bg-neutral-900/40 p-8`}
-                    >
-                      <h3 className="text-2xl font-semibold">{item.role}</h3>
-                      <p className="mt-1 text-sm uppercase tracking-widest text-neutral-400">
-                        {item.date} · {item.company}
-                      </p>
-                      <ul className="mt-5 list-disc space-y-2 pl-5 text-neutral-300">
-                        {item.achievements.map((achievement) => (
-                          <li key={achievement}>{achievement}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="pointer-events-none absolute left-1/2 top-8 hidden h-3 w-3 -translate-x-1/2 rounded-full border border-neutral-600 bg-neutral-950 md:block" />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="projects" className="min-h-screen px-6 py-24">
-        <div className="mx-auto max-w-6xl">
-          <h2
-            className="mb-12 text-4xl font-bold md:text-5xl"
-            style={{ fontFamily: "'Space Mono', monospace" }}
-          >
-            Featured Projects
-          </h2>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {FEATURED_PROJECTS.map((project) => (
-              <article key={project.title} className="project-flip-card h-80">
-                <div className="project-flip-card-inner relative h-full w-full rounded-2xl">
-                  <div
-                    className={`project-flip-face project-flip-front ${project.patternClass} flex h-full items-end rounded-2xl border border-neutral-800 bg-neutral-900/60 p-6`}
-                  >
-                    <h3
-                      className="text-2xl font-bold"
-                      style={{ fontFamily: "'Space Mono', monospace" }}
-                    >
-                      {project.title}
-                    </h3>
-                  </div>
-
-                  <div className="project-flip-face project-flip-back flex h-full flex-col rounded-2xl border border-neutral-700 bg-neutral-900 p-6">
-                    <h3 className="text-xl font-semibold">{project.title}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-neutral-300">
-                      {project.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {project.stack.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs text-neutral-200"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <a
-                      href={project.source}
-                      className="mt-auto inline-flex items-center justify-center rounded-lg border border-neutral-600 px-4 py-2 text-sm font-medium transition hover:border-neutral-400 hover:bg-neutral-800"
-                    >
-                      View Source
-                    </a>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+        <FooterCTA />
+      </main>
     </div>
   );
 }
