@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { FiDownload, FiGithub, FiMail } from "react-icons/fi";
 import BackgroundLayers from "./components/background/BackgroundLayers";
 import CursorAura from "./components/cursor/CursorAura";
@@ -16,9 +16,9 @@ const EXPERIENCES = [
     date: "Feb 9, 2026 - May 22, 2026",
     company: "SMU SCIS",
     achievements: [
-      "Engineered an advanced RAG and NLI pipeline using Gemma 4 to autonomously extract Knowledge Components from unstructured educational syllabuses.",
-      "Developed a deterministic semantic mapping algorithm using vector embeddings to build hierarchical Directed Acyclic Graphs (DAGs), eliminating structural hallucinations.",
-      "Tuned hyperparameter thresholds to optimize true-positive pedagogical connections across 340+ concepts, generating 64 recursive DAGs with 100% structural validity.",
+      "Engineered a multi-modal RAG pipeline (LlamaParse, Gemma 4 & LLaVA) that automatically extracted and structured 340+ learning concepts from raw, unstructured lecture slide text and images into learning concepts.",
+      "Developed an automated concept-mapping tool using vector embeddings that visually connects related academic topics to build hierarchical Directed Acyclic Graphs (DAGs).",
+      "Reduced manual professor review workload by creating an NLI screener tool to cross-check draft exam questions' scope against the syllabus, ensuring test alignment and content validity.",
     ],
   },
   {
@@ -44,54 +44,71 @@ const EXPERIENCES = [
 
 const FEATURED_PROJECTS = [
   {
-    title: "ISD Entity Extraction App",
-    description:
-      "Led a team to develop a predictive web app that automates the extraction of entities from unstructured text, reducing manual data sifting.",
-    stack: ["Python", "Flask", "Ollama API", "NLP"],
-    source: "https://github.com/daphnetok/datathon-entity-relationship-analysis-modelling",
-    patternClass: "project-pattern-grid",
-  },
-  {
-    title: "SG Livability Analytics",
-    description:
-      "Developed predictive dashboards to analyze public transport efficiency and forecast infrastructure load based on benchmarked public data.",
-    stack: ["Power BI", "DAX", "AI Predictive Modeling"],
-    source: "https://github.com/daphnetok",
-    patternClass: "project-pattern-radial",
-  },
-  {
     title: "Advanced RAG for Education",
     description:
-      "Architected an end-to-end pipeline using Gemma 4 and Python to automatically extract and map educational concepts from unstructured syllabuses. Engineered semantic algorithms and an automated validation system to generate highly accurate, hallucination-free knowledge graphs.",
+      "Architected an end-to-end Generative AI pipeline utilizing LlamaParse, Gemma 4 and Llava to autonomously extract knowledge components from unstructured syllabuses. Engineered vector embeddings and semantic validation algorithms to generate highly accurate, hallucination-free knowledge graphs.",
     stack: ["Python", "Gemma 4", "LlamaParse", "Llava", "Vector Embeddings", "NLI"],
     source: "https://github.com/daphnetok/Advanced-RAG-for-education",
     patternClass: "project-pattern-diagonal",
   },
   {
-    title: "2Shiok2Go - reduce SG hawker food waste",
+    title: "SG Livability Analytics",
     description:
-      "2Shiok2Go is a web app that reduces food waste in Singapore by linking users to hawker stalls with surplus meals. Featuring location-based listings, price and dietary filters, pickup slots, and AI-powered food suggestions, it makes hawker food more accessible while promoting sustainability.",
-    stack: ["Python", "Vue.js", "Firebase", "Chart.js", "Tailwind.css", "Google Maps API", "Gemini API"],
-    source: "https://github.com/daphnetok/Advanced-RAG-for-education",
+      "Engineered an interactive visual analytics suite using public transit data to model infrastructure demand and optimize urban livability metrics. Utilized advanced DAX functions and relational modeling to build dynamic forecasting interfaces.",
+    stack: ["Power BI", "DAX", "AI Predictive Modeling", "Data Engineering"],
+    source: "https://dtpz2727.wixsite.com/website-1/visual-analytics", 
+    patternClass: "project-pattern-radial",
+  },
+  {
+    title: "2Shiok2Go Sustainability App",
+    description:
+      "Developed a full-stack sustainability web application designed to mitigate urban food waste. Integrated location-based mapping, real-time filtering, and AI-driven recommendations to dynamically connect consumers with surplus hawker inventory.",
+    stack: ["Vue.js", "Python Flask", "Firebase", "Chart.js", "Google Maps API", "Gemini API"],
+    source: "https://github.com/daphnetok/2shiok2go", 
     patternClass: "project-pattern-grid",
   },
   {
-    title: "Doctor Everywhere",
+    title: "Doctor Everywhere Telemedicine",
     description:
-      "Doctor Everywhere covers a Telemedicine business scenario, where patients are able to consult a doctor and get a prescription from the comfort of their home. Our system allows the patient to queue virtually and make payment, the doctor to make prescription.",
-    stack: ["Python", "Vue.js", "Firebase", "Chart.js", "Tailwind.css", "Google Maps API", "Gemini API"],
-    source: "https://github.com/daphnetok/Advanced-RAG-for-education",
-    patternClass: "project-pattern-radial",
+      "Designed and deployed a comprehensive telemedicine platform using enterprise-level microservice practices, facilitating end-to-end virtual healthcare. Implemented secure virtual queuing, digital payment gateways, and prescription modules to streamline the remote patient-doctor experience.",
+    stack: ["Vue.js", "Python", "Firebase", "Tailwind CSS"],
+    source: "https://github.com/k4yseer/doctor-everywhere", 
+    patternClass: "project-pattern-diagonal",
   },
+  {
+    title: "ISD Entity Extraction App",
+    description:
+      "Led a cross-functional team during the SMUBIA Datathon to architect a predictive full-stack web application. Leveraged LLMs to autonomously extract and map entities from unstructured text, significantly reducing manual data processing overhead.",
+    stack: ["Python", "Flask", "Ollama API", "NLP", "Generative AI"],
+    source: "https://github.com/daphnetok/datathon-entity-relationship-analysis-modelling",
+    patternClass: "project-pattern-grid",
+  },
+  {
+    title: "IMDB Movie Recommendation System",
+    description:
+      "Engineered an end-to-end recommendation engine powered by content-based filtering. Architected custom web scraping scripts to extract rich media metadata, processed text datasets into vector spaces, and implemented Cosine Similarity metrics to deliver accurate, real-time personalized suggestions.",
+    stack: ["Python", "Web Scraping", "Scikit-Learn", "Cosine Similarity", "NLP", "Data Pipeline"],
+    source: "https://github.com/daphnetok/movie_recommendation_system",
+    patternClass: "project-pattern-diagonal",
+  }
 ];
 
 const SECTION_IDS = NAV_ITEMS.map((item) => item.id);
+const ABOUT_TEXT = `Hi there! I am Daphne, an penultimate student double majoring in Information Systems and Artificial Intelligence, with a specialization in Business Analytics.
+
+My passion lies in seeing how data can drive smarter decisions and how technology can make lives so much easier. With a strong foundation in data visualization and machine learning, I thrive on transforming raw datasets into actionable business intelligence using tools like Power BI, Tableau, Python and SQL.
+
+Beyond uncovering insights that optimize business strategies and building AI-driven solutions, I am equally invested in people. Whether I am engineering interactive dashboards or leading community initiatives, my goal is always the same: using technology and leadership to create a tangible, positive impact on lives! When I am away from my keyboard, you can probably find me organizing community initiatives or testing out new baking recipes :)
+`;
 
 function App() {
   const activeSection = useScrollspy(SECTION_IDS);
   const [showIdentity, setShowIdentity] = useState(false);
   const [experienceProgress, setExperienceProgress] = useState(0);
+  const [aboutLength, setAboutLength] = useState(0);
   const experienceSectionRef = useRef(null);
+  const aboutCardRef = useRef(null);
+  const aboutInView = useInView(aboutCardRef, { once: true, amount: 0.35 });
 
   useEffect(() => {
     const fontId = "space-mono-font";
@@ -136,6 +153,14 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!aboutInView) return;
+    if (aboutLength < ABOUT_TEXT.length) {
+      const timeout = setTimeout(() => setAboutLength((prev) => prev + 1), 12);
+      return () => clearTimeout(timeout);
+    }
+  }, [aboutInView, aboutLength]);
+
   return (
     <div className="relative min-h-screen font-sans text-zinc-800">
       <BackgroundLayers />
@@ -154,13 +179,12 @@ function App() {
               About Me
             </h2>
             <div className="grid gap-10 md:grid-cols-2">
-              <div className="aura-card rounded-2xl p-8">
-                <p className="body-copy leading-relaxed text-zinc-500">
-                  I am Daphne Tok, an Information Systems undergraduate specializing
-                  in Business Analytics. I am passionate about transforming raw data
-                  into actionable business intelligence using tools like Power BI,
-                  SQL, and Python. I enjoy uncovering insights that directly optimize
-                  business strategy and building AI-driven solutions.
+              <div ref={aboutCardRef} className="aura-card rounded-2xl p-8">
+                <p className="body-copy whitespace-pre-line leading-relaxed text-zinc-500">
+                  {ABOUT_TEXT.slice(0, aboutLength)}
+                  {aboutInView && aboutLength < ABOUT_TEXT.length && (
+                    <span className="ml-0.5 inline-block h-[0.9em] w-0.5 animate-pulse bg-rose-300 align-middle" />
+                  )}
                 </p>
               </div>
               <div className="aura-card rounded-2xl p-8">
@@ -173,7 +197,7 @@ function App() {
                     whileTap={{ scale: 0.95 }}
                   >
                     <FiDownload className="text-xl text-rose-400 transition group-hover:text-rose-500" />
-                    View Résumé
+                    View Resume
                   </motion.a>
                   <motion.a
                     href="https://github.com/daphnetok"
