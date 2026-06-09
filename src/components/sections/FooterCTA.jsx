@@ -59,7 +59,7 @@ function FooterCTA() {
         </motion.div>
 
         <p className="mb-6 mt-12 text-center text-xs text-zinc-400">
-          © 2026 Daphne Tok · Designed & Coded with React
+          © 2026 Daphne Tok 
         </p>
       </div>
     </footer>
