@@ -3,9 +3,15 @@ import { motion } from "framer-motion";
 const EDUCATION = [
   {
     school: "Singapore Management University (SMU)",
-    period: "Sept 2024 – Present",
+    period: "Sept 2024 – May 2028 (expected)",
     credential: "Bachelor of Science (Information Systems)",
-    focus: "Specialized in Business Analytics",
+    focus: (
+      <>
+        Double major in Information Systems & Artificial Intelligence
+        <br />
+        Specialized in Business Analytics
+      </>
+    ),
   },
   {
     school: "Nanyang Polytechnic (NYP)",
