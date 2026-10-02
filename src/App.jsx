@@ -190,7 +190,7 @@ function App() {
               <div className="aura-card rounded-2xl p-8">
                 <div className="flex h-full flex-col justify-center gap-4">
                   <motion.a
-                    href="/Daphne_Tok_CV.pdf"
+                    href="/Daphne_Tok_CV.pdf?v=e45acea843d5"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="aura-button group flex items-center justify-center gap-3 rounded-xl px-6 py-5 text-lg font-semibold"
