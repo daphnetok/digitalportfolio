@@ -36,7 +36,7 @@ function FooterCTA() {
               daphne.tok.2024@computing.smu.edu.sg
             </motion.a>
             <motion.a
-              href="https://www.linkedin.com/in/daphnetok"
+              href="https://www.linkedin.com/in/daphne-tok"
               target="_blank"
               rel="noopener noreferrer"
               whileTap={{ scale: 0.95 }}
@@ -59,7 +59,7 @@ function FooterCTA() {
         </motion.div>
 
         <p className="mb-6 mt-12 text-center text-xs text-zinc-400">
-          © 2026 Daphne Tok 
+          © 2026 Daphne Tok · Designed & Coded with React
         </p>
       </div>
     </footer>
